@@ -3,6 +3,7 @@
 
 #include <entity.hpp>
 #include <vector>
+#include <unordered_map>
 
 #include <tilemap_entity.hpp>
 #include <misc.hpp>
@@ -36,14 +37,23 @@ public:
     /// @brief Returns an entity in the group
     /// @param name Returns an entity in the group
     virtual Entity *first_in_group(std::string name);
+    /// @brief Gets entity by name
+    /// @param name String name of entity
+    /// @return Pointer to entity
+    virtual Entity *get_entity(std::string name);
 
     /// @brief Unloads all entities from memory
     virtual void unload_entities();
 
     virtual void restart() = 0;
 
+    virtual const std::vector<Entity*>& get_entities();
+
 protected:
+    /// @warning Never add to this array yourself, always use Scene::add_entity(Entity*)
     std::vector<Entity*> entities;
+    /// @warning Never add to this map yourself, always use Scene::add_entity(Entity*)
+    std::unordered_map<std::string, Entity*> entities_by_name;
 };
 
 typedef std::map<std::string, Scene*> SceneMap;

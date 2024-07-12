@@ -143,9 +143,9 @@ def get_filename(string):
 
 def run():
     if WEB:
-        server_res = subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "cd /d build/web_build && python -m http.server"])
+        server_res = subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "color 2 && cd /d build/web_build && python -m http.server"])
         time.sleep(2)
-        ngrok_res = subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "ngrok", "http", "8000"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ngrok_res = subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "color 4 && ngrok http 8000"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         webbrowser.open("http://localhost:8000")
     else:
         result = subprocess.run("Build.exe", shell=True, cwd="build")
@@ -166,9 +166,12 @@ def clean():
         print("Cleanedn't :(")
     print("")
 
+def debug():
+    subprocess.run(["debug.bat"])
+
 window = tkinter.Tk()
 window.configure(bg='#333333')
-window.geometry("512x512")
+window.geometry("494x494")
 window.title("Auto Compiling and Running!")
 
 font = ("Helvetica", 24)
@@ -182,11 +185,14 @@ make_button.place(x = 16, y = 16 + 80)
 run_button = tkinter.Button(window, text="Run", command=run, font=font)
 run_button.place(x = 16, y = 16 + 160)
 
-clean_button = tkinter.Button(window, text="Clean", command=clean, font=font)
-clean_button.place(x = 16, y = 16 + 418)
+debug_button = tkinter.Button(window, text="Debug", command=debug, font=font)
+debug_button.place(x = 16, y = 16 + 240)
 
 web_button = tkinter.Button(window, text=f"Web: {WEB}", command=toggle_web_mode, font=font)
-web_button.place(x = 16, y = 16 + 418 - 80)
-toggle_web_mode()
+web_button.place(x = 16, y = 16 + 320)
+
+clean_button = tkinter.Button(window, text="Clean", command=clean, font=font)
+clean_button.place(x = 16, y = 16 + 400)
+
 
 window.mainloop()

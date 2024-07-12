@@ -9,6 +9,14 @@ int Scene::entity_count() {
     return entities.size();
 }
 
+Entity *Scene::get_entity(std::string name) {
+    if (entities_by_name.find(name) == entities_by_name.end()) {
+        std::cout << "ERROR - Entity " << name << " not found!" << std::endl;
+        exit(1);
+    }
+    return entities_by_name[name];
+}
+
 void Scene::process_entities(float delta) {
     int i = 0;
     while (i != entities.size()) {
@@ -22,6 +30,7 @@ void Scene::process_entities(float delta) {
     for (int i = entities.size()-1; i >= 0; i--) {
 
         if (entities[i]->is_death_queued()) {
+            entities_by_name.erase(entities[i]->get_name());
             delete entities[i];
             entities.erase(entities.begin() + i);
         }
@@ -38,6 +47,13 @@ void Scene::draw_entities(float delta) {
 }
 
 void Scene::add_entity(Entity* entity) {
+    std::string original_name = entity->get_name();
+    int i = 2;
+    while (entities_by_name.find(entity->get_name()) != entities_by_name.end()) {
+        entity->set_name(original_name + std::to_string(i));
+        i++;
+    }
+    entities_by_name[entity->get_name()] = entity;
     entities.push_back(entity);
 }
 
@@ -59,12 +75,16 @@ Entity *Scene::first_in_group(std::string name) {
 
 void Scene::unload_entities() {
     for (int i = entities.size()-1; i >= 0; i--) {
+        entities_by_name.erase(entities[i]->get_name());
 
         delete entities[i];
         entities.erase(entities.begin() + i);
     }
 }
 
+const std::vector<Entity*>& Scene::get_entities() {
+    return entities;
+}
 
 void Scene::process(float delta) {}
 
@@ -88,7 +108,9 @@ void SceneManager::unload(std::string name) {
 }
 
 void SceneManager::unload_all() {
+    std::vector<std::string> to_unload {};
     for (auto& scene_pair: scene_map) {
-        unload(scene_pair.first);
+        to_unload.push_back(scene_pair.first);
     }
+    for (auto to: to_unload) unload(to);
 }

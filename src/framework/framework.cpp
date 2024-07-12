@@ -5,15 +5,35 @@ RenderTexture2D ui_layer, game_layer, composition_layer;
 ShaderPtr post_processing_ptr; 
 TexturePtr noise_texture,
            paper_texture;
+        
+float background_color[4] = {0, 0, 0, 1};
 
-void Framework::init(std::string title, Vector2 resolution, int window_scale) {
+clock_t frame_timer;
+unsigned long frame_time;
+
+bool unlimited_framerate = false;
+bool debug_ui;
+
+void Framework::init(std::string title, Vector2 resolution, int window_scale, bool _debug_window) {
     srand(time(NULL));
     res = resolution;
+    debug_ui = _debug_window;
 
     // Init
     InitWindow(res.x * window_scale, res.y * window_scale, (title).c_str());
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetExitKey(0);
+
+    frame_timer = clock();
+
+    BeginDrawing();
+    rlImGuiSetup(true);
+    rlImGuiBegin();
+    ImGui::SetWindowFontScale(2);
+    ImGui::SetWindowCollapsed(true);
+    ImGui::SetWindowSize({358, 104});
+    rlImGuiEnd();
+    EndDrawing();
 
     ui_layer   = LoadRenderTexture(res.x, res.y);
     game_layer = LoadRenderTexture(res.x, res.y);
@@ -41,6 +61,74 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale) {
     post_processing_ptr = ShaderManager::get("post_processing.glsl"); 
     noise_texture = TextureManager::get("post_processing/noise.png");
     paper_texture = TextureManager::get("post_processing/paper.png");
+}
+
+void Framework::debug_gui() {
+    rlImGuiBegin();
+    ImVec4 performance_color = frame_time > (1.0/60.0 * 1000) ?
+        ImVec4(1, 0, 0, 1) : ImVec4(0, 1, 0, 1);
+
+    ImGui::TextColored(
+        performance_color,
+        ("FPS: " + std::to_string(GetFPS())).c_str()
+    );
+    ImGui::TextColored(
+        performance_color,
+        ("Frame time: " + std::to_string(frame_time) + "ms/16.66ms").c_str()
+    );
+
+    bool before = unlimited_framerate;
+    ImGui::Checkbox("Unlimited framerate", &unlimited_framerate);
+    if (before != unlimited_framerate)
+        SetTargetFPS(unlimited_framerate ? 0 : 60);
+
+    ImGui::Text(("Entity count: " + std::to_string(
+        SceneManager::scene_on->entity_count()
+    )).c_str());
+    ImGui::Text(("Component count: " + std::to_string(
+        ComponentManager::component_count()
+    )).c_str());
+
+    if (ImGui::CollapsingHeader("Entities:")) {
+        ImGui::Indent(25.f);
+        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.4f, 0.7f, 1.0f, 0.15f));
+
+        int i = 0;
+        for (Entity* entity: SceneManager::scene_on->get_entities()) {
+            i++;
+            std::string ent_name = entity->get_name().c_str();
+
+            if (ImGui::CollapsingHeader(ent_name.c_str())) {
+                ImGui::Indent(25.f);
+                ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.4f, 0.7f, 1.0f, 0.1f));
+
+                if (ImGui::CollapsingHeader(("Components##" + std::to_string(i)).c_str())) {
+                    ImGui::Indent(25.f);
+                    for (auto component: entity->get_components()) {
+                        component->draw_gui_info();
+                    }
+                    ImGui::Unindent(25.f);
+                }
+                if (ImGui::CollapsingHeader(("Groups##" + std::to_string(i)).c_str())) {
+                    ImGui::Indent(25.f);
+                    for (auto group: entity->get_groups()) {
+                        ImGui::Text(group.c_str());
+                    }
+                    ImGui::Unindent(25.f);
+                }
+                ImGui::Unindent(25.f);
+                ImGui::PopStyleColor();
+            }
+        }
+        ImGui::Unindent(25.f);
+        ImGui::PopStyleColor();
+    }
+
+    ImGui::Checkbox("Draw areas", &DRAW_AREAS);
+    ImGui::Checkbox("Draw colliders", &DRAW_COLLIDERS);
+
+    ImGui::ColorEdit4("Background color", background_color);
+    rlImGuiEnd();
 }
 
 void Framework::process_modules(float delta) {
@@ -75,7 +163,7 @@ void Framework::draw_game_layer(float delta) {
     // Game layer
     BeginTextureMode(game_layer);
     BeginMode2D(*global_camera);
-    ClearBackground({0, 0, 0, 255});
+    ClearBackground(Float4ToColor(background_color));
 
     SceneManager::scene_on->draw_entities(delta);
     DrawableManager::draw();
@@ -111,7 +199,9 @@ void Framework::run() {
         process_scene(delta);
 
         // Drawing start 
+        frame_timer = clock();
         BeginDrawing();
+        
         Framework::draw_game_layer(delta);
         Framework::draw_ui_layer(delta);
         // Compose UI and game layer
@@ -172,12 +262,14 @@ void Framework::run() {
             Color{255, 255, 255}
         );
         EndShaderMode();
+
+        if (debug_ui) {
+            Framework::debug_gui();
+        }
+        clock_t new_frame_timer = clock();
+        frame_time  = new_frame_timer - frame_timer;
         EndDrawing();
 
-        // FPS counter
-        std::string fps_string = std::to_string(GetFPS());
-        const char* fps_cstring = fps_string.c_str();
-        SetWindowTitle(fps_cstring);
     }
     deinit();
 }
@@ -190,5 +282,6 @@ void Framework::deinit() {
     SceneManager::unload_all();
     AudioManager::unload_all();
 
+    rlImGuiShutdown();
     CloseWindow();
 }

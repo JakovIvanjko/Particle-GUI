@@ -1,11 +1,33 @@
 #include <entity.hpp>
 
 // <Entity>
-Entity::Entity(): death_queued {false} {}
+Entity::Entity(std::string name): death_queued {false}, name {name} {}
+Entity::Entity(): death_queued {false}, name {"Entity"} {}
 Entity::~Entity() {
     for (auto& comp_pair: comps) {
         delete comp_pair.second;
     }
+}
+
+std::string Entity::get_name() {
+    return name;
+}
+
+void Entity::set_name(std::string new_name) {
+    name = new_name;
+}
+
+std::unordered_set<std::string>& Entity::get_groups() {
+    return groups;
+}
+
+
+std::vector<Component*> Entity::get_components() {
+    std::vector<Component*> comp_arr {};
+    for (auto comp: comps) {
+        comp_arr.push_back(comp.second);
+    }
+    return comp_arr;
 }
 
 void Entity::process(float delta) {}
