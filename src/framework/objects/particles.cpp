@@ -178,50 +178,63 @@ void ParticleSystem::particle_gui(){
         rlImGuiBegin();
 
 
-        ImGui::Text((this->texture_name).c_str());
+        ImGui::Text(texture_name.c_str());
 
-        ImGui::DragFloat("Lifetime:",&(this->lifetime));
-        ImGui::DragFloat("Lifetime randomness:",&(this->lifetime_randomness));
-        ImGui::DragFloat("Particle angle:",&(this->particle_angle));
-        ImGui::DragFloat("Particle angle randomness:",&(this->particle_angle_randomness));
+        ImGui::DragFloat("Lifetime:",&lifetime);
+        ImGui::DragFloat("Lifetime randomness:",&lifetime_randomness);
+        ImGui::DragFloat("Particle angle:",&particle_angle);
+        ImGui::DragFloat("Particle angle randomness:",&particle_angle_randomness);
 
-        bool before=&(this->rotate_to_velocity);
+        ImGui::Checkbox("Rotate to velocity",&rotate_to_velocity);
+            
 
-        ImGui::Checkbox("Rotate to velocity",&(this->rotate_to_velocity));
-            if (before!=rotate_to_velocity){
-                //To be done
-            }
+        ImGui::DragFloat("Angular velocity:",&angular_velocity);
+        ImGui::DragFloat("Angular velocity randomness:",&angular_velocity_randomness);
 
-        ImGui::DragFloat("Angular velocity:",&(this->angular_velocity));
-        ImGui::DragFloat("Angular velocity randomness:",&(this->angular_velocity_randomness));
+        ImGui::DragFloat("Velocity:",&velocity);
+        ImGui::DragFloat("Velocity randomness:",&velocity_randomness);
+        ImGui::DragFloat("Velocity end:",&velocity_end);
+        ImGui::DragFloat("Shot angle:",&shot_angle);
+        ImGui::DragFloat("Spread:",&spread);
 
-        ImGui::DragFloat("Velocity:",&(this->velocity));
-        ImGui::DragFloat("Velocity randomness:",&(this->velocity_randomness));
-        ImGui::DragFloat("Velocity end:",&(this->velocity_end));
-        ImGui::DragFloat("Shot angle:",&(this->shot_angle));
-        ImGui::DragFloat("Spread:",&(this->spread));
-
-        ImGui::DragFloat("Particle scale:",&(this->particle_scale));
-        ImGui::DragFloat("Particle scale randomness:",&(this->particle_scale_randomness));
-        ImGui::DragFloat("Particle scale end:",&(this->particle_scale_end));
+        ImGui::DragFloat("Particle scale:",&particle_scale);
+        ImGui::DragFloat("Particle scale randomness:",&particle_scale_randomness);
+        ImGui::DragFloat("Particle scale end:",&particle_scale_end);
 
 
-        ImGui::DragFloat("Firerate:",&(this->firerate));
-        ImGui::DragFloat("Firerate randomness:",&(this->firerate_randomness));
-        ImGui::DragFloat("Amount:", (float*) &(this->amount));
+        ImGui::DragFloat("Firerate:",&firerate);
+        ImGui::DragFloat("Firerate randomness:",&firerate_randomness);
+        ImGui::DragFloat("Amount:", (float*) &amount);
 
 
-        ImGui::DragFloat("Particle tint randomness:",&(this->particle_tint_randomness));
+        ImGui::DragFloat("Particle tint randomness:",&particle_tint_randomness);
         
-        ImGui::DragFloat4("Tint:",(float *) &(this->particle_tint));
-        ImGui::DragFloat4("Tint end:",(float *) &(this->particle_tint_end));
+        ImGui::DragFloat4("Tint:",(float *) &particle_tint);
+        ImGui::DragFloat4("Tint end:",(float *) &particle_tint_end);
 
-        const char* easing[8]={"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
-        static int item_current=0;
+        const char* easing[8] = {"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
+        
+        int item_current_velocity = 0;
+        int item_current_scale = 0;
+        int item_current_tint = 0;
 
-        ImGui::Combo("Velocity_ease_name",&item_current,easing,IM_ARRAYSIZE(easing));
-        ImGui::Combo("Scale_ease_name",&item_current,easing,IM_ARRAYSIZE(easing));
-        ImGui::Combo("Tint_ease_name",&item_current,easing,IM_ARRAYSIZE(easing));
+
+        for (int i=0; i<IM_ARRAYSIZE(easing) ; i++){
+            if ( velocity_ease_name == (std::string) easing[i])
+                item_current_velocity = i;
+
+            if ( scale_ease_name == (std::string) easing[i])
+                item_current_scale = i;
+
+            if ( tint_ease_name == (std::string) easing[i])
+                item_current_tint = i;
+
+        };
+
+
+        ImGui::Combo("Velocity_ease_name",&item_current_velocity,easing,IM_ARRAYSIZE(easing));
+        ImGui::Combo("Scale_ease_name",&item_current_scale,easing,IM_ARRAYSIZE(easing));
+        ImGui::Combo("Tint_ease_name",&item_current_tint,easing,IM_ARRAYSIZE(easing));
         
 
         rlImGuiEnd();
