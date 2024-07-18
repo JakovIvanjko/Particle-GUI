@@ -14,6 +14,12 @@
 #include <transform_component.hpp>
 #include <misc.hpp>
 
+///testing
+// Imgui
+#include <imgui.h>
+#include <rlImGui.h>
+#include <rlImGuiColors.h>
+
 #include <json.hpp>
 #include <memory>
 #include <fstream>
@@ -138,6 +144,7 @@ protected:
     int amount;
     Color particle_tint, particle_tint_end; float particle_tint_randomness;
     
+    std::string texture_name;
     std::string velocity_ease_name;
     std::string scale_ease_name;
     std::string tint_ease_name;
@@ -185,6 +192,8 @@ public:
     /// @brief Sets the amount of particles emitted in a burst
     /// @param amt Amount of particles emitted in a burst
     void set_amount(int amt);
+
+    void particle_gui();
 
     void reload_data();
 

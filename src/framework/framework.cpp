@@ -12,7 +12,9 @@ clock_t frame_timer;
 unsigned long frame_time;
 
 bool unlimited_framerate = false;
-bool debug_ui;
+bool debug_ui = false;
+bool particle_ui = true;
+
 
 void Framework::init(std::string title, Vector2 resolution, int window_scale, bool _debug_window) {
     srand(time(NULL));
@@ -130,6 +132,7 @@ void Framework::debug_gui() {
     ImGui::ColorEdit4("Background color", background_color);
     rlImGuiEnd();
 }
+
 
 void Framework::process_modules(float delta) {
         // Processing data managers
@@ -263,9 +266,19 @@ void Framework::run() {
         );
         EndShaderMode();
 
-        if (debug_ui) {
+        /*if (debug_ui) {
             Framework::debug_gui();
-        }
+        }*/
+
+        if(particle_ui){
+
+            Player* player =(Player*) SceneManager::scene_on->get_entity("player");
+            player->particlesystem.particle_gui();
+
+
+
+        };
+
         clock_t new_frame_timer = clock();
         frame_time  = new_frame_timer - frame_timer;
         EndDrawing();

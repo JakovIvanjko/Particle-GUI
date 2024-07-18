@@ -23,6 +23,8 @@ void ParticleDataManager::load(std::string name) {
     particle_data_map[name] = std::make_shared<json>(
         data
     );
+
+     
 }
 
 // Returns particle data smart pointer and loads the particle data if required
@@ -170,6 +172,61 @@ int ParticleSystem::get_left() {
     return left;
 }
 
+
+void ParticleSystem::particle_gui(){
+
+        rlImGuiBegin();
+
+
+        ImGui::Text((this->texture_name).c_str());
+
+        ImGui::DragFloat("Lifetime:",&(this->lifetime));
+        ImGui::DragFloat("Lifetime randomness:",&(this->lifetime_randomness));
+        ImGui::DragFloat("Particle angle:",&(this->particle_angle));
+        ImGui::DragFloat("Particle angle randomness:",&(this->particle_angle_randomness));
+
+        bool before=&(this->rotate_to_velocity);
+
+        ImGui::Checkbox("Rotate to velocity",&(this->rotate_to_velocity));
+            if (before!=rotate_to_velocity){
+                //To be done
+            }
+
+        ImGui::DragFloat("Angular velocity:",&(this->angular_velocity));
+        ImGui::DragFloat("Angular velocity randomness:",&(this->angular_velocity_randomness));
+
+        ImGui::DragFloat("Velocity:",&(this->velocity));
+        ImGui::DragFloat("Velocity randomness:",&(this->velocity_randomness));
+        ImGui::DragFloat("Velocity end:",&(this->velocity_end));
+        ImGui::DragFloat("Shot angle:",&(this->shot_angle));
+        ImGui::DragFloat("Spread:",&(this->spread));
+
+        ImGui::DragFloat("Particle scale:",&(this->particle_scale));
+        ImGui::DragFloat("Particle scale randomness:",&(this->particle_scale_randomness));
+        ImGui::DragFloat("Particle scale end:",&(this->particle_scale_end));
+
+
+        ImGui::DragFloat("Firerate:",&(this->firerate));
+        ImGui::DragFloat("Firerate randomness:",&(this->firerate_randomness));
+        ImGui::DragFloat("Amount:", (float*) &(this->amount));
+
+
+        ImGui::DragFloat("Particle tint randomness:",&(this->particle_tint_randomness));
+        
+        ImGui::DragFloat4("Tint:",(float *) &(this->particle_tint));
+        ImGui::DragFloat4("Tint end:",(float *) &(this->particle_tint_end));
+
+        const char* easing[8]={"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
+        static int item_current=0;
+
+        ImGui::Combo("Velocity_ease_name",&item_current,easing,IM_ARRAYSIZE(easing));
+        ImGui::Combo("Scale_ease_name",&item_current,easing,IM_ARRAYSIZE(easing));
+        ImGui::Combo("Tint_ease_name",&item_current,easing,IM_ARRAYSIZE(easing));
+        
+
+        rlImGuiEnd();
+    };
+
 // Reload particle system object from it's json object
 void ParticleSystem::reload_data() {
     json data = *particle_data.get();
@@ -194,6 +251,9 @@ void ParticleSystem::reload_data() {
         emit_shape = new EmitPoint();
     }
     
+    // Texture
+    texture_name=data["texture"];
+
     // Angle
     particle_angle = data["angle"];
     particle_angle_randomness = data["angle_randomness"];
