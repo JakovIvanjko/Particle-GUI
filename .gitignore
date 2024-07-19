@@ -6,5 +6,5 @@
 /build/web_build/index.html
 .vscode
 
-/build/assets/**
+
 .gitignore
