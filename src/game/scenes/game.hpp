@@ -2,7 +2,6 @@
 #define GAME_H
 #include <scene.hpp>
 #include <entities/player.hpp>
-#include <entities/pillar.hpp>
 
 class GameScene: public Scene {
 public:

@@ -271,12 +271,8 @@ void Framework::run() {
         }*/
 
         if(particle_ui){
-
-            Player* player =(Player*) SceneManager::scene_on->get_entity("player");
+            Player* player = (Player*)SceneManager::scene_on->get_entity("player");
             player->particlesystem.particle_gui();
-
-
-
         };
 
         clock_t new_frame_timer = clock();

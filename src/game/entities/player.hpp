@@ -9,13 +9,10 @@
 
 class Player: public Entity {
 public:
-    //Sprite sprite;
     ParticleSystem particlesystem;
 
     Player();
-
     void process(float delta);
-    void die();
 };
 
 #endif
