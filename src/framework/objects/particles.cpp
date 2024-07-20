@@ -200,12 +200,23 @@ void ParticleSystem::particle_gui(){
 
     ImGui::DragFloat("Firerate:",&firerate);
     ImGui::DragFloat("Firerate randomness:",&firerate_randomness);
-    ImGui::DragFloat("Amount:", (float*) &amount);
+    ImGui::DragInt("Amount:", &amount);
 
     ImGui::DragFloat("Particle tint randomness:",&particle_tint_randomness);
-        
-    ImGui::DragFloat4("Tint:",(float *) &particle_tint);
-    ImGui::DragFloat4("Tint end:",(float *) &particle_tint_end);
+    
+    float tint_arr[] = {
+        tint.r/255.f, tint.g/255.f, tint.b/255.f,
+        tint.a/255.f
+    };
+    ImGui::ColorEdit4("Tint:", tint_arr);
+    tint = Float4ToColor(tint_arr);
+
+    float tint_end_arr[] = {
+        particle_tint_end.r/255.f, particle_tint_end.g/255.f, particle_tint_end.b/255.f,
+        particle_tint_end.a/255.f
+    };
+    ImGui::ColorEdit4("Tint end:", tint_end_arr);
+    particle_tint_end = Float4ToColor(tint_end_arr);
 
     const char* easing[8] = {"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
         
