@@ -190,13 +190,13 @@ void ParticleSystem::particle_gui(){
 
     ImGui::DragFloat("Velocity:",&velocity);
     ImGui::DragFloat("Velocity randomness:",&velocity_randomness);
-    ImGui::DragFloat("Velocity end:",&velocity_end);
+    ImGui::DragFloat("Velocity end ratio:",&velocity_end, 0.005, 0, 3);
     ImGui::DragFloat("Shot angle:",&shot_angle);
     ImGui::DragFloat("Spread:",&spread);
 
-    ImGui::DragFloat("Particle scale:",&particle_scale);
-    ImGui::DragFloat("Particle scale randomness:",&particle_scale_randomness);
-    ImGui::DragFloat("Particle scale end:",&particle_scale_end);
+    ImGui::DragFloat("Scale:",&particle_scale);
+    ImGui::DragFloat("Scale randomness:",&particle_scale_randomness);
+    ImGui::DragFloat("Scale end ratio:",&particle_scale_end, 0.005, 0, 3);
 
     ImGui::DragFloat("Firerate:",&firerate);
     ImGui::DragFloat("Firerate randomness:",&firerate_randomness);
