@@ -175,48 +175,6 @@ int ParticleSystem::get_left() {
 
 void ParticleSystem::particle_gui(){
     rlImGuiBegin();
-    ImGui::Text(texture_name.c_str());
-
-    ImGui::DragFloat("Lifetime:",&lifetime);
-    ImGui::DragFloat("Lifetime randomness:",&lifetime_randomness);
-    ImGui::DragFloat("Particle angle:",&particle_angle);
-    ImGui::DragFloat("Particle angle randomness:",&particle_angle_randomness);
-
-    ImGui::Checkbox("Rotate to velocity",&rotate_to_velocity);
-            
-
-    ImGui::DragFloat("Angular velocity:",&angular_velocity);
-    ImGui::DragFloat("Angular velocity randomness:",&angular_velocity_randomness);
-
-    ImGui::DragFloat("Velocity:",&velocity);
-    ImGui::DragFloat("Velocity randomness:",&velocity_randomness);
-    ImGui::DragFloat("Velocity end ratio:",&velocity_end, 0.005, 0, 3);
-    ImGui::DragFloat("Shot angle:",&shot_angle);
-    ImGui::DragFloat("Spread:",&spread);
-
-    ImGui::DragFloat("Scale:",&particle_scale);
-    ImGui::DragFloat("Scale randomness:",&particle_scale_randomness);
-    ImGui::DragFloat("Scale end ratio:",&particle_scale_end, 0.005, 0, 3);
-
-    ImGui::DragFloat("Firerate:",&firerate);
-    ImGui::DragFloat("Firerate randomness:",&firerate_randomness);
-    ImGui::DragInt("Amount:", &amount);
-
-    ImGui::DragFloat("Particle tint randomness:", &particle_tint_randomness, .5f, 0, 255);
-    
-    float tint_arr[] = {
-        tint.r/255.f, tint.g/255.f, tint.b/255.f,
-        tint.a/255.f
-    };
-    ImGui::ColorEdit4("Tint:", tint_arr);
-    tint = Float4ToColor(tint_arr);
-
-    float tint_end_arr[] = {
-        particle_tint_end.r/255.f, particle_tint_end.g/255.f, particle_tint_end.b/255.f,
-        particle_tint_end.a/255.f
-    };
-    ImGui::ColorEdit4("Tint end:", tint_end_arr);
-    particle_tint_end = Float4ToColor(tint_end_arr);
 
     const char* easing[8] = {"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
         
@@ -236,9 +194,61 @@ void ParticleSystem::particle_gui(){
 
     };
 
-    ImGui::Combo("Velocity_ease_name",&item_current_velocity,easing,IM_ARRAYSIZE(easing));
-    ImGui::Combo("Scale_ease_name",&item_current_scale,easing,IM_ARRAYSIZE(easing));
-    ImGui::Combo("Tint_ease_name",&item_current_tint,easing,IM_ARRAYSIZE(easing));
+    char buff[256];
+    strncpy(buff, texture_name.c_str(), sizeof(buff));
+    buff[sizeof(buff) - 1] = '\0';
+
+    if (ImGui::InputText("Texture path", buff, sizeof(buff))) {
+        texture_name = buff;
+        texture = TextureManager::get(texture_name);
+    }
+
+    ImGui::SeparatorText("Spawning and timing");
+    ImGui::DragFloat("Firerate:",&firerate);
+    ImGui::DragFloat("Firerate randomness:",&firerate_randomness);
+    ImGui::DragInt("Amount:", &amount);
+    
+    ImGui::DragFloat("Shot angle:",&shot_angle);
+    ImGui::DragFloat("Spread:",&spread);
+
+    ImGui::DragFloat("Lifetime:",&lifetime);
+    ImGui::DragFloat("Lifetime randomness:",&lifetime_randomness);
+
+    ImGui::SeparatorText("Transform");
+    ImGui::DragFloat("Velocity:",&velocity);
+    ImGui::DragFloat("Velocity randomness:",&velocity_randomness);
+    ImGui::DragFloat("Velocity end ratio:",&velocity_end, 0.005, 0, 3);
+    ImGui::Combo("Velocity ease",&item_current_velocity,easing,IM_ARRAYSIZE(easing));
+
+    ImGui::DragFloat("Scale:",&particle_scale, 0.005, 0, 3);
+    ImGui::DragFloat("Scale randomness:",&particle_scale_randomness, 0.005, 0, 3);
+    ImGui::DragFloat("Scale end ratio:",&particle_scale_end, 0.005, 0, 3);
+    ImGui::Combo("Scale ease",&item_current_scale,easing,IM_ARRAYSIZE(easing));
+
+    ImGui::Checkbox("Rotate to velocity",&rotate_to_velocity);
+    ImGui::DragFloat("Particle angle:",&particle_angle);
+    ImGui::DragFloat("Particle angle randomness:",&particle_angle_randomness);
+    ImGui::DragFloat("Angular velocity:",&angular_velocity);
+    ImGui::DragFloat("Angular velocity randomness:",&angular_velocity_randomness);
+
+    ImGui::SeparatorText("Color");
+    ImGui::DragFloat("Particle tint randomness:", &particle_tint_randomness, .5f, 0, 255);
+    
+    float tint_arr[] = {
+        tint.r/255.f, tint.g/255.f, tint.b/255.f,
+        tint.a/255.f
+    };
+    ImGui::ColorEdit4("Tint:", tint_arr);
+    tint = Float4ToColor(tint_arr);
+
+    float tint_end_arr[] = {
+        particle_tint_end.r/255.f, particle_tint_end.g/255.f, particle_tint_end.b/255.f,
+        particle_tint_end.a/255.f
+    };
+    ImGui::ColorEdit4("Tint end:", tint_end_arr);
+    particle_tint_end = Float4ToColor(tint_end_arr);
+
+    ImGui::Combo("Tint ease",&item_current_tint,easing,IM_ARRAYSIZE(easing));
     
     velocity_ease_name = easing[item_current_velocity];
     scale_ease_name = easing[item_current_scale];
