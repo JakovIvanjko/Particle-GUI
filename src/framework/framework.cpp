@@ -31,7 +31,9 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
     BeginDrawing();
     rlImGuiSetup(true);
     rlImGuiBegin();
+    ImGui::Begin("Editor GUI");
     ImGui::SetWindowFontScale(2);
+    ImGui::End();
     rlImGuiEnd();
     EndDrawing();
 

@@ -175,6 +175,7 @@ int ParticleSystem::get_left() {
 
 void ParticleSystem::particle_gui(){
     rlImGuiBegin();
+    ImGui::Begin("Editor GUI");
 
     const char* easing[8] = {"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
         
@@ -204,48 +205,48 @@ void ParticleSystem::particle_gui(){
     }
 
     ImGui::SeparatorText("Spawning and timing");
-    ImGui::DragFloat("Firerate:",&firerate);
-    ImGui::DragFloat("Firerate randomness:",&firerate_randomness);
-    ImGui::DragInt("Amount:", &amount);
+    ImGui::DragFloat("Firerate",&firerate);
+    ImGui::DragFloat("Firerate randomness",&firerate_randomness);
+    ImGui::DragInt("Amount", &amount);
     
-    ImGui::DragFloat("Shot angle:",&shot_angle);
-    ImGui::DragFloat("Spread:",&spread);
+    ImGui::DragFloat("Shot angle",&shot_angle);
+    ImGui::DragFloat("Spread",&spread);
 
-    ImGui::DragFloat("Lifetime:",&lifetime);
-    ImGui::DragFloat("Lifetime randomness:",&lifetime_randomness);
+    ImGui::DragFloat("Lifetime",&lifetime, 0.01, 0, 8);
+    ImGui::DragFloat("Lifetime randomness",&lifetime_randomness, 0.005, 0, 3);
 
     ImGui::SeparatorText("Transform");
-    ImGui::DragFloat("Velocity:",&velocity);
-    ImGui::DragFloat("Velocity randomness:",&velocity_randomness);
-    ImGui::DragFloat("Velocity end ratio:",&velocity_end, 0.005, 0, 3);
+    ImGui::DragFloat("Velocity",&velocity);
+    ImGui::DragFloat("Velocity randomness",&velocity_randomness);
+    ImGui::DragFloat("Velocity end ratio",&velocity_end, 0.005, 0, 3);
     ImGui::Combo("Velocity ease",&item_current_velocity,easing,IM_ARRAYSIZE(easing));
 
-    ImGui::DragFloat("Scale:",&particle_scale, 0.005, 0, 3);
-    ImGui::DragFloat("Scale randomness:",&particle_scale_randomness, 0.005, 0, 3);
-    ImGui::DragFloat("Scale end ratio:",&particle_scale_end, 0.005, 0, 3);
+    ImGui::DragFloat("Scale",&particle_scale, 0.005, 0, 3);
+    ImGui::DragFloat("Scale randomness",&particle_scale_randomness, 0.005, 0, 3);
+    ImGui::DragFloat("Scale end ratio",&particle_scale_end, 0.005, 0, 3);
     ImGui::Combo("Scale ease",&item_current_scale,easing,IM_ARRAYSIZE(easing));
 
     ImGui::Checkbox("Rotate to velocity",&rotate_to_velocity);
-    ImGui::DragFloat("Particle angle:",&particle_angle);
-    ImGui::DragFloat("Particle angle randomness:",&particle_angle_randomness);
-    ImGui::DragFloat("Angular velocity:",&angular_velocity);
-    ImGui::DragFloat("Angular velocity randomness:",&angular_velocity_randomness);
+    ImGui::DragFloat("Particle angle",&particle_angle);
+    ImGui::DragFloat("Particle angle randomness",&particle_angle_randomness);
+    ImGui::DragFloat("Angular velocity",&angular_velocity);
+    ImGui::DragFloat("Angular velocity randomness",&angular_velocity_randomness);
 
     ImGui::SeparatorText("Color");
-    ImGui::DragFloat("Particle tint randomness:", &particle_tint_randomness, .5f, 0, 255);
+    ImGui::DragFloat("Particle tint randomness", &particle_tint_randomness, .5f, 0, 255);
     
     float tint_arr[] = {
         tint.r/255.f, tint.g/255.f, tint.b/255.f,
         tint.a/255.f
     };
-    ImGui::ColorEdit4("Tint:", tint_arr);
+    ImGui::ColorEdit4("Tint", tint_arr);
     tint = Float4ToColor(tint_arr);
 
     float tint_end_arr[] = {
         particle_tint_end.r/255.f, particle_tint_end.g/255.f, particle_tint_end.b/255.f,
         particle_tint_end.a/255.f
     };
-    ImGui::ColorEdit4("Tint end:", tint_end_arr);
+    ImGui::ColorEdit4("Tint end", tint_end_arr);
     particle_tint_end = Float4ToColor(tint_end_arr);
 
     ImGui::Combo("Tint ease",&item_current_tint,easing,IM_ARRAYSIZE(easing));
@@ -254,6 +255,7 @@ void ParticleSystem::particle_gui(){
     scale_ease_name = easing[item_current_scale];
     tint_ease_name = easing[item_current_tint];
 
+    ImGui::End();
     rlImGuiEnd();
 }
 
@@ -442,7 +444,7 @@ void ParticleSystem::process(float delta) {
     // Spawn particles when timer runs out
     spawn_timer -= delta;
 
-    if (spawn_timer <= 0 && left != 0) {
+    if (spawn_timer <= 0 && left != 0 && firerate != 0) {
         spawn_timer = 1.0 / (firerate + firerate_randomness*.5f * RandF2());
 
         left--;
