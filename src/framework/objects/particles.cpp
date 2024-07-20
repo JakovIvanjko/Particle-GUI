@@ -202,7 +202,7 @@ void ParticleSystem::particle_gui(){
     ImGui::DragFloat("Firerate randomness:",&firerate_randomness);
     ImGui::DragInt("Amount:", &amount);
 
-    ImGui::DragFloat("Particle tint randomness:",&particle_tint_randomness);
+    ImGui::DragFloat("Particle tint randomness:", &particle_tint_randomness, .5f, 0, 255);
     
     float tint_arr[] = {
         tint.r/255.f, tint.g/255.f, tint.b/255.f,
@@ -224,7 +224,7 @@ void ParticleSystem::particle_gui(){
     int item_current_scale = 0;
     int item_current_tint = 0;
 
-    for (int i=0; i<IM_ARRAYSIZE(easing) ; i++){
+    for (int i = 0; i < IM_ARRAYSIZE(easing); i++){
         if ( velocity_ease_name == (std::string) easing[i])
             item_current_velocity = i;
 
@@ -239,7 +239,11 @@ void ParticleSystem::particle_gui(){
     ImGui::Combo("Velocity_ease_name",&item_current_velocity,easing,IM_ARRAYSIZE(easing));
     ImGui::Combo("Scale_ease_name",&item_current_scale,easing,IM_ARRAYSIZE(easing));
     ImGui::Combo("Tint_ease_name",&item_current_tint,easing,IM_ARRAYSIZE(easing));
-        
+    
+    velocity_ease_name = easing[item_current_velocity];
+    scale_ease_name = easing[item_current_scale];
+    tint_ease_name = easing[item_current_tint];
+
     rlImGuiEnd();
 }
 
@@ -368,21 +372,21 @@ void ParticleSystem::spawn_particle() {
     new_particle.angular_velocity = angular_velocity  + (angular_velocity_randomness*.5 * RandF2());
 
     // Color
-    int rand_r = particle_tint_randomness*.5 * RandF2(),
+    float rand_r = particle_tint_randomness*.5 * RandF2(),
         rand_g = particle_tint_randomness*.5 * RandF2(),
         rand_b = particle_tint_randomness*.5 * RandF2();
 
     new_particle.tint = Color{
-        static_cast<unsigned char>(tint.r + rand_r),
-        static_cast<unsigned char>(tint.g + rand_g),
-        static_cast<unsigned char>(tint.b + rand_b),
+        static_cast<unsigned char>((float)tint.r + rand_r),
+        static_cast<unsigned char>((float)tint.g + rand_g),
+        static_cast<unsigned char>((float)tint.b + rand_b),
         tint.a
     };
 
     new_particle.tint_end = Color{
-        static_cast<unsigned char>(particle_tint_end.r + rand_r),
-        static_cast<unsigned char>(particle_tint_end.g + rand_g),
-        static_cast<unsigned char>(particle_tint_end.b + rand_b),
+        static_cast<unsigned char>((float)particle_tint_end.r + rand_r),
+        static_cast<unsigned char>((float)particle_tint_end.g + rand_g),
+        static_cast<unsigned char>((float)particle_tint_end.b + rand_b),
         particle_tint_end.a
     };
 
