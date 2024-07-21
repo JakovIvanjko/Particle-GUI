@@ -292,6 +292,7 @@ void Framework::run() {
 
                 if (filename != "") {
                     open_files.push_back(filename);
+                    player->particlesystems.push_back(new ParticleSystem(filename));
                 }
             }
             ImGui::EndTabBar();

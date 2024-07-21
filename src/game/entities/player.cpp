@@ -1,7 +1,7 @@
 #include <entities/player.hpp>
 
 Player::Player():
-    particlesystems {new ParticleSystem("jump.json"), new ParticleSystem("test.json")},
+    particlesystems {new ParticleSystem("assets/particles/jump.json"), new ParticleSystem("assets/particles/test.json")},
     sys_open {0}
      {
 
@@ -15,6 +15,8 @@ Player::Player():
 
 void Player::process(float delta) {
     for (int i = 0; i < particlesystems.size(); i++) {
+        particlesystems[i]->position = {260, 90};
+        particlesystems[i]->set_left(-1);
         particlesystems[i]->visible = i == sys_open;
     }
 }

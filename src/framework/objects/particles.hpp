@@ -25,7 +25,7 @@
 #include <fstream>
 using json = nlohmann::json;
 
-#define PARTICLE_DIR (std::string)"assets/particles/"+
+#define PARTICLE_DIR (std::string)""+
 
 // <Particle Manager>
 typedef std::shared_ptr<json> ParticleDataPtr;
