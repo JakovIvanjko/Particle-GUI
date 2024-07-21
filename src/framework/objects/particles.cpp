@@ -175,10 +175,12 @@ int ParticleSystem::get_left() {
 
 void ParticleSystem::particle_gui(){
     const char* easing[8] = {"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
+    const char* shapes[3] = {"Point","Circle","Rectangle"};
         
     int item_current_velocity = 0;
     int item_current_scale = 0;
     int item_current_tint = 0;
+    int current_shape = 0;
 
     for (int i = 0; i < IM_ARRAYSIZE(easing); i++){
         if ( velocity_ease_name == (std::string) easing[i])
@@ -247,6 +249,30 @@ void ParticleSystem::particle_gui(){
     particle_tint_end = Float4ToColor(tint_end_arr);
 
     ImGui::Combo("Tint ease",&item_current_tint,easing,IM_ARRAYSIZE(easing));
+
+    if (shape == CIRCLE) {
+        current_shape=1;
+
+        ImGui::Combo("Shape",&current_shape,shapes,IM_ARRAYSIZE(shapes));
+        ImGui::DragFloat("Radius", &shape_radius);
+        ImGui::DragFloat("Edge ratio", &edge_ratio);
+    }
+
+    if (shape == RECTANGLE) {
+        current_shape=2;
+
+        ImGui::Combo("Shape",&current_shape,shapes,IM_ARRAYSIZE(shapes));
+        ImGui::DragFloat("Height", &shape_height);
+        ImGui::DragFloat("Width", &shape_width);        
+        ImGui::DragFloat("Edge ratio", &edge_ratio);
+    }
+
+    if (current_shape == 0)
+        shape = POINT;
+    if (current_shape == 1)
+        shape = CIRCLE;
+    if (current_shape == 2)
+        shape = RECTANGLE;
     
     velocity_ease_name = easing[item_current_velocity];
     scale_ease_name = easing[item_current_scale];
@@ -259,6 +285,11 @@ void ParticleSystem::reload_data() {
 
     texture = TextureManager::get(data["texture"]);
 
+    shape_radius = 0;
+    shape_height = 0;
+    shape_width = 0;
+    edge_ratio = 0;
+
     delete emit_shape;
     if (data.contains("shape")) {
         json shape_data = data["shape"];
@@ -267,10 +298,17 @@ void ParticleSystem::reload_data() {
         // Is circle (radius, edge)
         if (num_params == 2) {
             emit_shape = new EmitCircle(shape_data[0], shape_data[1]);
+            shape = CIRCLE;
+            shape_radius = shape_data[0];
+            edge_ratio = shape_data[1];
         
         // Is rectangle (width, height, edge)
         } else {
             emit_shape = new EmitRect({shape_data[0], shape_data[1]}, shape_data[2]);
+            shape = RECTANGLE;
+            shape_height = shape_data[0];
+            shape_width = shape_data[1];
+            edge_ratio = shape_data[2];
         }
     // Default to point
     } else {

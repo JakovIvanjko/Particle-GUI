@@ -128,6 +128,12 @@ protected:
     // All particle system properties (loaded from a JSON file)
     EmitShape* emit_shape;
 
+    enum Shape {
+        POINT,
+        CIRCLE,
+        RECTANGLE,
+    };
+
     float lifetime, lifetime_randomness;
     float particle_angle,
           particle_angle_randomness;
@@ -143,6 +149,11 @@ protected:
     float firerate, firerate_randomness;
     int amount;
     Color particle_tint, particle_tint_end; float particle_tint_randomness;
+
+    float shape_radius;
+    float shape_height;
+    float shape_width;
+    float edge_ratio;    
     
     std::string texture_name;
     std::string velocity_ease_name;
@@ -150,6 +161,11 @@ protected:
     std::string tint_ease_name;
 
     std::shared_ptr<Texture2D> texture;
+
+    
+
+    //treba popravit uz saving
+    enum Shape shape;
 
 public:
     ParticleSystem(std::string data_filename, Vector2 position={0, 0});
