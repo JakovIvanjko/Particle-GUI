@@ -9,7 +9,8 @@
 
 class Player: public Entity {
 public:
-    ParticleSystem particlesystem;
+    int sys_open;
+    std::vector<ParticleSystem*> particlesystems;
 
     Player();
     void process(float delta);

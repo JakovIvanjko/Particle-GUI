@@ -187,6 +187,8 @@ void Framework::draw_ui_layer(float delta) {
     EndTextureMode();
 }
 
+std::vector<std::string> open_files = {"jump.json", "test.json"};
+
 void Framework::run() {
     while (!WindowShouldClose()) {
         // Delta time calc
@@ -271,8 +273,33 @@ void Framework::run() {
         }*/
 
         if(particle_ui){
+            rlImGuiBegin();
+            ImGui::Begin("Editor GUI");
+
             Player* player = (Player*)SceneManager::scene_on->get_entity("player");
-            player->particlesystem.particle_gui();
+
+            ImGui::BeginTabBar("FileTab");
+            for (int i = 0; i < player->particlesystems.size(); i++) {
+                ImGui::SameLine();
+
+                if (ImGui::Button(open_files[i].c_str())) {
+                    player->sys_open = i;
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(" + ")) {
+                std::string filename = choose_file();
+
+                if (filename != "") {
+                    open_files.push_back(filename);
+                }
+            }
+            ImGui::EndTabBar();
+
+            player->particlesystems[player->sys_open]->particle_gui();
+
+            ImGui::End();
+            rlImGuiEnd();
         };
 
         clock_t new_frame_timer = clock();

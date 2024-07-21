@@ -132,6 +132,8 @@ public:
     Drawable(Vector2 position={0, 0}, Vector2 offset={0, 0}, Vector2 scale={1, 1}, float angle=0, std::string shader_path="-", bool is_ui=false);
     ~Drawable();
 
+    bool visible;
+
     Vector2 position, offset, scale;
     float angle;
     Color tint;

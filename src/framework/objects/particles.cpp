@@ -174,9 +174,6 @@ int ParticleSystem::get_left() {
 
 
 void ParticleSystem::particle_gui(){
-    rlImGuiBegin();
-    ImGui::Begin("Editor GUI");
-
     const char* easing[8] = {"ease_in_out","ease_in","ease_out","back_in","back_out","back_in_out","bounce_out","elastic_out"};
         
     int item_current_velocity = 0;
@@ -254,9 +251,6 @@ void ParticleSystem::particle_gui(){
     velocity_ease_name = easing[item_current_velocity];
     scale_ease_name = easing[item_current_scale];
     tint_ease_name = easing[item_current_tint];
-
-    ImGui::End();
-    rlImGuiEnd();
 }
 
 // Reload particle system object from it's json object

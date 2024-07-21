@@ -8,6 +8,8 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <stdio.h>
+#include <cstring>
 
 extern Vector2 res;
 extern Vector2 half_res;
@@ -19,6 +21,13 @@ typedef struct {
 bool operator==(Color first, Color other);
 
 Color Float4ToColor(float* arr);
+
+/// @brief Converts an integer into a roman numeral string (eg. 145 -> CXLV)
+/// @param num 
+/// @return 
+std::string roman_numeral(int num);
+
+std::string choose_file();
 
 std::ostream& operator<<(std::ostream& str, Vector2 vec);
 std::ostream& operator<<(std::ostream& str, Color col);

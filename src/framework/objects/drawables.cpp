@@ -220,6 +220,7 @@ Drawable::Drawable(Vector2 position, Vector2 offset, Vector2 scale, float angle,
     offset {offset},
     scale {scale},
     angle {angle},
+    visible {true},
     tint {255, 255, 255, 255},
     z_coord {0},
     shader_bond {ShaderBond(shader_path)},
@@ -255,8 +256,10 @@ bool drawable_comparison(Drawable *a, Drawable *b) {
 void DrawableManager::render(std::set<Drawable *>& rendering) {
     std::vector<Drawable *> sorted (rendering.begin(), rendering.end());
     std::sort(sorted.begin(), sorted.end(), drawable_comparison);
-
+    
     for (auto drawable: sorted) {
+        if (!drawable->visible) continue;
+
         drawable->process(GetFrameTime());
         drawable->shader_bond.update_uniforms();
         drawable->shader_bond.use();
