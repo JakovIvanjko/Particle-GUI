@@ -31,9 +31,9 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
     BeginDrawing();
     rlImGuiSetup(true);
     rlImGuiBegin();
+    ImGui::Begin("Editor GUI");
     ImGui::SetWindowFontScale(2);
-    ImGui::SetWindowCollapsed(true);
-    ImGui::SetWindowSize({358, 104});
+    ImGui::End();
     rlImGuiEnd();
     EndDrawing();
 
@@ -187,6 +187,8 @@ void Framework::draw_ui_layer(float delta) {
     EndTextureMode();
 }
 
+std::vector<std::string> open_files = {"jump.json", "test.json"};
+
 void Framework::run() {
     while (!WindowShouldClose()) {
         // Delta time calc
@@ -271,12 +273,65 @@ void Framework::run() {
         }*/
 
         if(particle_ui){
+            rlImGuiBegin();
+            ImGui::Begin("Editor GUI");
 
-            Player* player =(Player*) SceneManager::scene_on->get_entity("player");
-            player->particlesystem.particle_gui();
+            Player* player = (Player*)SceneManager::scene_on->get_entity("player");
 
+            ImGui::BeginTabBar("FileTab");
+            ImGui::SameLine();
+            ImGui::BeginChild(
+                "##FileTabScroll", 
+                ImVec2(0, ImGui::GetFrameHeightWithSpacing() + 10),
+                false,
+                ImGuiWindowFlags_HorizontalScrollbar
+            );
 
+            for (int i = 0; i < player->particlesystems.size(); i++) {
+                ImGui::SameLine();
 
+                std::string filepath = open_files[i].c_str();
+                size_t pos = filepath.find_last_of("/\\");
+                std::string filename = (pos == std::string::npos) ? filepath : filepath.substr(pos + 1);
+
+                bool highlight = i == player->sys_open;
+                if (highlight)
+                    ImGui::PushStyleColor(ImGuiCol_Button, {0, 0.5, 1, 1});
+
+                if (ImGui::Button(filename.c_str())) {
+                    player->sys_open = i;
+                }
+                if (highlight)
+                    ImGui::PopStyleColor();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(" - ")) {
+                delete player->particlesystems[player->sys_open];
+
+                player->particlesystems.erase(
+                    player->particlesystems.begin() + player->sys_open
+                );
+                open_files.erase(open_files.begin() + player->sys_open);
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button(" + ")) {
+                std::string filename = choose_file();
+
+                if (filename != "") {
+                    open_files.push_back(filename);
+                    player->particlesystems.push_back(new ParticleSystem(filename));
+                }
+            }
+            ImGui::EndChild();
+            ImGui::EndTabBar();
+
+            ImGui::Dummy({0, 5});
+
+            player->particlesystems[player->sys_open]->particle_gui();
+
+            ImGui::End();
+            rlImGuiEnd();
         };
 
         clock_t new_frame_timer = clock();

@@ -12,6 +12,48 @@ Color Float4ToColor(float* arr) {
     };
 }
 
+const std::string roman_numbers[] = {
+    "M" , "CM", "D",
+    "CD", "C" , "XC", 
+    "L" , "XL", "X" ,
+    "IX", "V" , "IV",
+    "I"
+};
+const int numbers[] = {
+    1000, 900, 500,
+    400 , 100, 90 ,
+    50  , 40 , 10 ,
+    9   , 5  , 4  ,
+    1
+};
+
+std::string roman_numeral(int num) {
+    for (int i = 0; i < 13; i++) {
+        int number_on = numbers[i];
+        if (num >= number_on)
+            return roman_numbers[i] + roman_numeral(num - number_on);
+    }
+    return "";
+}
+
+std::string choose_file() {
+    system("powershell -command \"Add-Type -AssemblyName System.Windows.Forms; $ofd = New-Object System.Windows.Forms.OpenFileDialog; $ofd.ShowDialog() | Out-Null; $ofd.FileName\" > temp.txt");
+    FILE* file = fopen("temp.txt", "r");
+    
+    char filepath[128];
+    fgets(filepath, sizeof(filepath), file);
+
+    int newlineIndex = strcspn(filepath, "\n");
+    filepath[newlineIndex] = '\0';
+
+    char* result = (char*)malloc(strlen(filepath) + 1);
+    strcpy(result, filepath);
+    
+    fclose(file);
+    remove("temp.txt");
+    return (std::string)result;
+}
+
 bool operator==(Color first, Color other) {
     return first.r == other.r && first.g == other.g && first.b == other.b && first.a == other.a;
 }

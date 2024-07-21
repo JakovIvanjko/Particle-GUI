@@ -9,13 +9,11 @@
 
 class Player: public Entity {
 public:
-    //Sprite sprite;
-    ParticleSystem particlesystem;
+    int sys_open;
+    std::vector<ParticleSystem*> particlesystems;
 
     Player();
-
     void process(float delta);
-    void die();
 };
 
 #endif

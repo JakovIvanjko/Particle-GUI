@@ -1,47 +1,22 @@
 #include <entities/player.hpp>
 
 Player::Player():
-    //sprite {Sprite("smiley.png")}
-    particlesystem {ParticleSystem("jump.json")}
+    particlesystems {new ParticleSystem("assets/particles/jump.json"), new ParticleSystem("assets/particles/test.json")},
+    sys_open {0}
      {
-    add_component(new TransformComponent(
-        this, {100,100}
-    ));
 
-    //sprite.shader_bond.set_shader("test.glsl");
-
-    auto area_comp = new AreaComponent(this, 32, 32);
-    area_comp -> set_mask_bit((int)AreaIndex::PILLAR, true);
-    area_comp -> area_entered.connect([this] (Entity* entity){
-        die();
-    });
-    add_component(area_comp);
+    for (auto& particlesystem: particlesystems) {
+        particlesystem->position = {260, 90};
+        particlesystem->set_left(-1);
+        particlesystem->visible = false;
+    }
+    set_name("player");
 }
 
 void Player::process(float delta) {
-    auto *trans_comp = (TransformComponent *)get_component(ComponentType::TRANSFORM);
-    //sprite.update_transform(trans_comp);
-
-    //Vector2 input_dir = InputVectorNormalized("left","right","up","down");
-    //trans_comp -> interpolate_velocity(
-    //    Vector2Multiply(input_dir, {100,100}),
-    //    20
-    //);
-
-    if (IsPressed("up")) {
-        trans_comp -> accelerate({0, -150});
-        
+    for (int i = 0; i < particlesystems.size(); i++) {
+        particlesystems[i]->position = {260, 90};
+        particlesystems[i]->set_left(-1);
+        particlesystems[i]->visible = i == sys_open;
     }
-
-    else {
-        trans_comp -> accelerate({0, 100});
-    }
-
-    if (trans_comp -> position.y <= 0 || trans_comp -> position.y >= 300) {
-        queue_free();
-    }
-}
-
-void Player::die(){
-    queue_free();
 }
