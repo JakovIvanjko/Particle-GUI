@@ -279,13 +279,36 @@ void Framework::run() {
             Player* player = (Player*)SceneManager::scene_on->get_entity("player");
 
             ImGui::BeginTabBar("FileTab");
+            ImGui::SameLine();
+            ImGui::BeginChild(
+                "##FileTabScroll", 
+                ImVec2(0, ImGui::GetFrameHeightWithSpacing() + 10),
+                false,
+                ImGuiWindowFlags_HorizontalScrollbar
+            );
+
             for (int i = 0; i < player->particlesystems.size(); i++) {
                 ImGui::SameLine();
 
-                if (ImGui::Button(open_files[i].c_str())) {
+                std::string filepath = open_files[i].c_str();
+                size_t pos = filepath.find_last_of("/\\");
+                std::string filename = (pos == std::string::npos) ? filepath : filepath.substr(pos + 1);
+
+
+                if (ImGui::Button(filename.c_str())) {
                     player->sys_open = i;
                 }
             }
+            ImGui::SameLine();
+            if (ImGui::Button(" - ")) {
+                delete player->particlesystems[player->sys_open];
+
+                player->particlesystems.erase(
+                    player->particlesystems.begin() + player->sys_open
+                );
+                open_files.erase(open_files.begin() + player->sys_open);
+            }
+
             ImGui::SameLine();
             if (ImGui::Button(" + ")) {
                 std::string filename = choose_file();
@@ -295,7 +318,10 @@ void Framework::run() {
                     player->particlesystems.push_back(new ParticleSystem(filename));
                 }
             }
+            ImGui::EndChild();
             ImGui::EndTabBar();
+
+            ImGui::Dummy({0, 5});
 
             player->particlesystems[player->sys_open]->particle_gui();
 
