@@ -294,10 +294,15 @@ void Framework::run() {
                 size_t pos = filepath.find_last_of("/\\");
                 std::string filename = (pos == std::string::npos) ? filepath : filepath.substr(pos + 1);
 
+                bool highlight = i == player->sys_open;
+                if (highlight)
+                    ImGui::PushStyleColor(ImGuiCol_Button, {0, 0.5, 1, 1});
 
                 if (ImGui::Button(filename.c_str())) {
                     player->sys_open = i;
                 }
+                if (highlight)
+                    ImGui::PopStyleColor();
             }
             ImGui::SameLine();
             if (ImGui::Button(" - ")) {
