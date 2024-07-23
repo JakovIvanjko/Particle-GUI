@@ -178,6 +178,8 @@ void Framework::draw_game_layer(float delta) {
         }
     }
 
+    DrawText(("Zoom " + std::to_string((int)round(desired_zoom * 100)) + "%").c_str(), -80, -100, 20, WHITE);
+
     SceneManager::scene_on->draw_entities(delta);
     DrawableManager::draw();
     
@@ -222,7 +224,8 @@ void Framework::run() {
         last_mouse = mouse_screen_pos();
         cam->target = Vector2Subtract(cam->target, Vector2Scale(mouse_diff, (1.f/desired_zoom) * (int)(IsPressed("shoot") && mouse_screen_pos().x > 160)));
 
-        desired_zoom += GetMouseWheelMove() * 0.2f * desired_zoom * (int)(mouse_screen_pos().x > 160);
+        float zmovement = GetMouseWheelMove() * 0.1f * desired_zoom * (int)(mouse_screen_pos().x > 160);
+        desired_zoom += round(zmovement / (0.1f*desired_zoom)) * (0.1f*desired_zoom);
 
         // Drawing start 
         frame_timer = clock();
