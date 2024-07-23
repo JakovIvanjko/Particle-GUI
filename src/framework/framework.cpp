@@ -50,7 +50,7 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
     // Default camera
     Camera2D* blank_camera = new Camera2D();
     blank_camera->target = {0, 0};
-    blank_camera->offset = {260, 90};
+    blank_camera->offset = {245, 90};
     blank_camera->rotation = 0;
     blank_camera->zoom = 1;
 
@@ -170,6 +170,13 @@ void Framework::draw_game_layer(float delta) {
     BeginTextureMode(game_layer);
     BeginMode2D(*global_camera);
     ClearBackground(Float4ToColor(background_color));
+
+    float width = 8, height = 8;
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            DrawRectangleLinesEx({x * 160 / width - 80, y * 160 / height - 80, 160/width, 160/height}, 2, {100, 100, 100, 40});
+        }
+    }
 
     SceneManager::scene_on->draw_entities(delta);
     DrawableManager::draw();
