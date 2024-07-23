@@ -8,6 +8,9 @@ TexturePtr noise_texture,
         
 float background_color[4] = {0, 0, 0, 1};
 
+float desired_zoom = 1;
+Vector2 last_mouse = {0, 0};
+
 clock_t frame_timer;
 unsigned long frame_time;
 
@@ -47,7 +50,7 @@ void Framework::init(std::string title, Vector2 resolution, int window_scale, bo
     // Default camera
     Camera2D* blank_camera = new Camera2D();
     blank_camera->target = {0, 0};
-    blank_camera->offset = {0, 0};
+    blank_camera->offset = {260, 90};
     blank_camera->rotation = 0;
     blank_camera->zoom = 1;
 
@@ -203,6 +206,17 @@ void Framework::run() {
         process_modules(delta);
         process_scene(delta);
 
+        auto cam = CameraManager::get_camera();
+
+        cam->zoom = Lerpi(cam->zoom, desired_zoom, 20);
+
+        Vector2 mouse_diff = Vector2Subtract(mouse_screen_pos(), last_mouse);
+
+        last_mouse = mouse_screen_pos();
+        cam->target = Vector2Subtract(cam->target, Vector2Scale(mouse_diff, (1.f/desired_zoom) * (int)(IsPressed("shoot") && mouse_screen_pos().x > 160)));
+
+        desired_zoom += GetMouseWheelMove() * 0.2f * desired_zoom * (int)(mouse_screen_pos().x > 160);
+
         // Drawing start 
         frame_timer = clock();
         BeginDrawing();
@@ -281,7 +295,7 @@ void Framework::run() {
             ImGui::BeginTabBar("FileTab");
             ImGui::SameLine();
             ImGui::BeginChild(
-                "##FileTabScroll", 
+                "##FileTabScroll",
                 ImVec2(0, ImGui::GetFrameHeightWithSpacing() + 10),
                 false,
                 ImGuiWindowFlags_HorizontalScrollbar

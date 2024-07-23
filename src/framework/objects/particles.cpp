@@ -23,8 +23,6 @@ void ParticleDataManager::load(std::string name) {
     particle_data_map[name] = std::make_shared<json>(
         data
     );
-
-     
 }
 
 // Returns particle data smart pointer and loads the particle data if required
