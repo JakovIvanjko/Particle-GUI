@@ -211,7 +211,9 @@ void ParticleSystem::particle_gui(){
     ImGui::DragInt("Amount", &amount);
     
     ImGui::DragFloat("Shot angle",&shot_angle);
+    spread *= RAD2DEG;
     ImGui::DragFloat("Spread",&spread);
+    spread *= DEG2RAD;
 
     ImGui::DragFloat("Lifetime",&lifetime, 0.01, 0, 8);
     ImGui::DragFloat("Lifetime randomness",&lifetime_randomness, 0.005, 0, 3);
