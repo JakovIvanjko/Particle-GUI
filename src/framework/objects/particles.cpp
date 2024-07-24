@@ -197,8 +197,12 @@ void ParticleSystem::particle_gui(){
     buff[sizeof(buff) - 1] = '\0';
 
     if (ImGui::InputText("Texture path", buff, sizeof(buff))) {
-        texture_name = buff;
-        texture = TextureManager::get(texture_name);
+        std::string new_name = buff;
+        if (FILE* file = fopen((TEXTURE_DIR new_name).c_str(), "r")) {
+            texture_name = new_name;
+            texture = TextureManager::get(texture_name);
+            fclose(file);
+        }
     }
 
     ImGui::SeparatorText("Spawning and timing");
