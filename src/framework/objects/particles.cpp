@@ -320,7 +320,7 @@ void ParticleSystem::reload_data() {
     }
     
     // Texture
-    texture_name=data["texture"];
+    texture_name = data["texture"];
 
     // Angle
     particle_angle = data["angle"];
@@ -391,7 +391,7 @@ void ParticleSystem::save_data(std::string filename) {
     a["scale"] = particle_scale;
     a["scale_randomness"] = particle_scale_randomness;
     a["scale_end"] = particle_scale_end;
-    (std::string)(a["scale_ease"]) = scale_ease_name;
+    a["scale_ease"] = scale_ease_name;
 
     a["angle"] = particle_angle;
     a["angle_randomness"] = particle_angle_randomness;
@@ -403,22 +403,27 @@ void ParticleSystem::save_data(std::string filename) {
 
     a["tint"] = {tint.r, tint.g, tint.b, tint.a};
 
-    a["particle_tint_end"] = {particle_tint_end.r, particle_tint_end.g, particle_tint_end.b, particle_tint_end.a};
+    a["tint_end"] = {particle_tint_end.r, particle_tint_end.g, particle_tint_end.b, particle_tint_end.a};
 
-    (std::string)(a["tint_ease"]) = tint_ease_name;
+    a["tint_ease"] = tint_ease_name;
 
     a["velocity"] = velocity;
     a["velocity_randomness"] = velocity_randomness;
     a["velocity_end"] = velocity_end;
-    (std::string)(a["velocity_ease"]) = velocity_ease_name;
+    a["velocity_ease"] = velocity_ease_name;
 
     a["shot_angle"] = shot_angle;
     a["spread"] = spread;
+    a["amount"] = amount;
+    a["tint_randomness"] = particle_tint_randomness;
 
-    std::string a_string = a.dump();
+    std::string a_string = a.dump(4);
     std::ofstream f(filename);
     f << a_string;
     f.close();
+
+    std::cout << "Saved to " + filename + "..." << std::endl;
+    ParticleDataManager::reload();
 }
 
 // Constructor

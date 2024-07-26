@@ -199,7 +199,7 @@ void Framework::draw_ui_layer(float delta) {
     EndTextureMode();
 }
 
-std::vector<std::string> open_files = {"jump.json", "test.json"};
+std::vector<std::string> open_files = {};
 
 void Framework::run() {
     while (!WindowShouldClose()) {
@@ -349,15 +349,16 @@ void Framework::run() {
             }
             ImGui::EndChild();
             ImGui::EndTabBar();
+            
+            if (open_files.size() != 0) {
+                ImGui::Dummy({0, 5});
 
-            ImGui::Dummy({0, 5});
+                player->particlesystems[player->sys_open]->particle_gui();
 
-            player->particlesystems[player->sys_open]->particle_gui();
-
-            if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) {
-                player -> particlesystems[player -> sys_open] -> save_data("ilovmuffins.txt");
+                if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) {
+                    player->particlesystems[player->sys_open]->save_data(open_files[player->sys_open]);
+                }
             }
-
             ImGui::End();
             rlImGuiEnd();
         };

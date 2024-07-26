@@ -1,29 +1,37 @@
 {
-    "texture": "bubble_particle.png",
-    "lifetime": 0.5, "lifetime_randomness": 0.2,
-
-    "firerate": 12.0, "firerate_randomness": 0,
     "amount": 2,
-
-    "shape": [4, 0],
-
-    "scale": 1.2, "scale_randomness": 0.4,
-    "scale_end": 0.1,
+    "angle": 0.0,
+    "angle_randomness": 0.0,
+    "angular_velocity": 0.0,
+    "angular_velocity_randomness": 0.0,
+    "firerate": 12.0,
+    "firerate_randomness": 0.0,
+    "lifetime": 0.5,
+    "lifetime_randomness": 0.20000000298023224,
+    "scale": 1.2000000476837158,
     "scale_ease": "bounce_out",
-
-    "angle": 0, "angle_randomness": 0,
-    "velocity_angle": false,
-
-    "angular_velocity": 0,
-    "angular_velocity_randomness": 0,
-
-    "tint": [255, 0, 0, 255], "tint_randomness": 255,
-    "tint_end": [255, 0, 0, 0],
+    "scale_end": 0.10000000149011612,
+    "scale_randomness": 0.4000000059604645,
+    "shot_angle": 0.0,
+    "spread": 360.0,
+    "texture": "particle_test.png",
+    "tint": [
+        255,
+        0,
+        0,
+        255
+    ],
     "tint_ease": "ease_in",
-
-    "velocity": 0, "velocity_randomness": 30,
-    "velocity_end" : 1,
+    "tint_end": [
+        255,
+        0,
+        0,
+        0
+    ],
+    "tint_randomness": 255.0,
+    "velocity": 0.0,
+    "velocity_angle": false,
     "velocity_ease": "ease_out",
-
-    "shot_angle": 0, "spread": 360
+    "velocity_end": 1.0,
+    "velocity_randomness": 30.0
 }

@@ -1,14 +1,9 @@
 #include <entities/player.hpp>
 
 Player::Player():
-    particlesystems {new ParticleSystem("assets/particles/jump.json"), new ParticleSystem("assets/particles/test.json")},
+    particlesystems {},
     sys_open {0}
      {
-
-    for (auto& particlesystem: particlesystems) {
-        particlesystem->set_left(-1);
-        particlesystem->visible = false;
-    }
     set_name("player");
 }
 
