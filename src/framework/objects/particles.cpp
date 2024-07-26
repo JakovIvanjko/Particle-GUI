@@ -371,6 +371,50 @@ void ParticleSystem::reload_data() {
     };
 }
 
+void ParticleSystem::save_data(std::string filename) {
+    json a = {};
+
+    a["texture"] = texture_name;
+
+    a["lifetime"] = lifetime;
+    a["lifetime_randomness"] = lifetime_randomness;
+    
+    a["firerate"] = firerate;
+    a["firerate_randomness"] = firerate_randomness;
+
+    a["scale"] = particle_scale;
+    a["scale_randomness"] = particle_scale_randomness;
+    a["scale_end"] = particle_scale_end;
+    (std::string)(a["scale_ease"]) = scale_ease_name;
+
+    a["angle"] = particle_angle;
+    a["angle_randomness"] = particle_angle_randomness;
+
+    a["velocity_angle"] = rotate_to_velocity;
+
+    a["angular_velocity"] = angular_velocity;
+    a["angular_velocity_randomness"] = angular_velocity_randomness;
+
+    a["tint"] = {tint.r, tint.g, tint.b, tint.a};
+
+    a["particle_tint_end"] = {particle_tint_end.r, particle_tint_end.g, particle_tint_end.b, particle_tint_end.a};
+
+    (std::string)(a["tint_ease"]) = tint_ease_name;
+
+    a["velocity"] = velocity;
+    a["velocity_randomness"] = velocity_randomness;
+    a["velocity_end"] = velocity_end;
+    (std::string)(a["velocity_ease"]) = velocity_ease_name;
+
+    a["shot_angle"] = shot_angle;
+    a["spread"] = spread;
+
+    std::string a_string = a.dump();
+    std::ofstream f(filename);
+    f << a_string;
+    f.close();
+}
+
 // Constructor
 ParticleSystem::ParticleSystem(std::string data_filename, Vector2 position):
     Drawable(position),

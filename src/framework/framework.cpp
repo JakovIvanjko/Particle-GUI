@@ -354,6 +354,10 @@ void Framework::run() {
 
             player->particlesystems[player->sys_open]->particle_gui();
 
+            if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) {
+                player -> particlesystems[player -> sys_open] -> save_data("ilovmuffins.txt");
+            }
+
             ImGui::End();
             rlImGuiEnd();
         };

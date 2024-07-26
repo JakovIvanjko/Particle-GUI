@@ -213,6 +213,8 @@ public:
 
     void reload_data();
 
+    void save_data(std::string filename);
+
     void process(float delta);
     void draw();
 };
