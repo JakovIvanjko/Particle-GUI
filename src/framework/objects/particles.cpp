@@ -178,7 +178,7 @@ void ParticleSystem::particle_gui(){
     int item_current_velocity = 0;
     int item_current_scale = 0;
     int item_current_tint = 0;
-    int current_shape = 0;
+    int current_shape = 1;
 
     for (int i = 0; i < IM_ARRAYSIZE(easing); i++){
         if ( velocity_ease_name == (std::string) easing[i])
@@ -253,6 +253,12 @@ void ParticleSystem::particle_gui(){
     particle_tint_end = Float4ToColor(tint_end_arr);
 
     ImGui::Combo("Tint ease",&item_current_tint,easing,IM_ARRAYSIZE(easing));
+
+    if(shape == POINT){
+        current_shape = 0;
+
+        ImGui::Combo("Shape",&current_shape,shapes,IM_ARRAYSIZE(shapes));
+    }
 
     if (shape == CIRCLE) {
         current_shape=1;
