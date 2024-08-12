@@ -12,6 +12,10 @@
     "scale_ease": "ease_in_out",
     "scale_end": 0.0,
     "scale_randomness": 0.4000000059604645,
+    "shape": [
+        24.0,
+        0.0
+    ],
     "shot_angle": 0.0,
     "spread": 6.2831854820251465,
     "texture": "particle_test.png",

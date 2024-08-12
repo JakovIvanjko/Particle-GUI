@@ -254,7 +254,7 @@ void ParticleSystem::particle_gui(){
 
     ImGui::Combo("Tint ease",&item_current_tint,easing,IM_ARRAYSIZE(easing));
 
-    ImGui::SeparatorText("Spawning and timing");
+    ImGui::SeparatorText("Shape");
     if(shape == POINT){
         current_shape = 0;
 
@@ -267,9 +267,6 @@ void ParticleSystem::particle_gui(){
         ImGui::Combo("Shape",&current_shape,shapes,IM_ARRAYSIZE(shapes));
         ImGui::DragFloat("Radius", &shape_radius);
         ImGui::DragFloat("Edge ratio", &edge_ratio);
-
-        ((EmitCircle*)emit_shape)->radius = shape_radius;
-        emit_shape->edge_ratio = edge_ratio;
     }
 
     if (shape == RECTANGLE) {
@@ -279,17 +276,21 @@ void ParticleSystem::particle_gui(){
         ImGui::DragFloat("Height", &shape_height);
         ImGui::DragFloat("Width", &shape_width);        
         ImGui::DragFloat("Edge ratio", &edge_ratio);
-
-        ((EmitRect*)emit_shape)->dimensions = {shape_width, shape_height};
-        emit_shape->edge_ratio = edge_ratio;
     }
 
-    if (current_shape == 0)
+    delete emit_shape;
+    if (current_shape == 0) {
         shape = POINT;
-    if (current_shape == 1)
+        emit_shape = new EmitPoint();
+    }
+    if (current_shape == 1) {
         shape = CIRCLE;
-    if (current_shape == 2)
+        emit_shape = new EmitCircle(shape_radius, edge_ratio);
+    }
+    if (current_shape == 2) {
         shape = RECTANGLE;
+        emit_shape = new EmitRect({shape_width, shape_height}, edge_ratio);
+    }
     
     velocity_ease_name = easing[item_current_velocity];
     scale_ease_name = easing[item_current_scale];
@@ -430,6 +431,11 @@ void ParticleSystem::save_data(std::string filename) {
     a["amount"] = amount;
     a["tint_randomness"] = particle_tint_randomness;
 
+    if (shape == CIRCLE) {
+        a["shape"] = {shape_radius, edge_ratio};
+    } else if (shape == RECTANGLE) {
+        a["shape"] = {shape_width, shape_height, edge_ratio};
+    }
     std::string a_string = a.dump(4);
     std::ofstream f(filename);
     f << a_string;
