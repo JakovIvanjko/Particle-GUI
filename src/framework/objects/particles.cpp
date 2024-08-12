@@ -254,6 +254,7 @@ void ParticleSystem::particle_gui(){
 
     ImGui::Combo("Tint ease",&item_current_tint,easing,IM_ARRAYSIZE(easing));
 
+    ImGui::SeparatorText("Spawning and timing");
     if(shape == POINT){
         current_shape = 0;
 
@@ -266,6 +267,9 @@ void ParticleSystem::particle_gui(){
         ImGui::Combo("Shape",&current_shape,shapes,IM_ARRAYSIZE(shapes));
         ImGui::DragFloat("Radius", &shape_radius);
         ImGui::DragFloat("Edge ratio", &edge_ratio);
+
+        ((EmitCircle*)emit_shape)->radius = shape_radius;
+        emit_shape->edge_ratio = edge_ratio;
     }
 
     if (shape == RECTANGLE) {
@@ -275,6 +279,9 @@ void ParticleSystem::particle_gui(){
         ImGui::DragFloat("Height", &shape_height);
         ImGui::DragFloat("Width", &shape_width);        
         ImGui::DragFloat("Edge ratio", &edge_ratio);
+
+        ((EmitRect*)emit_shape)->dimensions = {shape_width, shape_height};
+        emit_shape->edge_ratio = edge_ratio;
     }
 
     if (current_shape == 0)
