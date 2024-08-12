@@ -266,7 +266,7 @@ void ParticleSystem::particle_gui(){
 
         ImGui::Combo("Shape",&current_shape,shapes,IM_ARRAYSIZE(shapes));
         ImGui::DragFloat("Radius", &shape_radius);
-        ImGui::DragFloat("Edge ratio", &edge_ratio);
+        ImGui::DragFloat("Edge ratio", &edge_ratio, 0.0033, 0, 1);
     }
 
     if (shape == RECTANGLE) {
@@ -275,7 +275,7 @@ void ParticleSystem::particle_gui(){
         ImGui::Combo("Shape",&current_shape,shapes,IM_ARRAYSIZE(shapes));
         ImGui::DragFloat("Height", &shape_height);
         ImGui::DragFloat("Width", &shape_width);        
-        ImGui::DragFloat("Edge ratio", &edge_ratio);
+        ImGui::DragFloat("Edge ratio", &edge_ratio, 0.1, 0, 1);
     }
 
     delete emit_shape;

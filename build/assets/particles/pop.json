@@ -4,17 +4,17 @@
     "angle_randomness": 360.0,
     "angular_velocity": 0.0,
     "angular_velocity_randomness": 360.0,
-    "firerate": 1.0,
+    "firerate": 12.0,
     "firerate_randomness": 0.0,
     "lifetime": 0.800000011920929,
-    "lifetime_randomness": 0.10000000149011612,
+    "lifetime_randomness": 0.7900000214576721,
     "scale": 1.0,
     "scale_ease": "ease_in_out",
     "scale_end": 0.0,
     "scale_randomness": 0.4000000059604645,
     "shape": [
         24.0,
-        0.0
+        0.7950000166893005
     ],
     "shot_angle": 0.0,
     "spread": 6.2831854820251465,
@@ -37,5 +37,5 @@
     "velocity_angle": false,
     "velocity_ease": "ease_out",
     "velocity_end": 0.27000001072883606,
-    "velocity_randomness": 328.0
+    "velocity_randomness": 16.0
 }
